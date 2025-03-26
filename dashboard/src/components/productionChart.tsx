@@ -1,3 +1,4 @@
+// components/productionChart.tsx
 "use client"
 
 import { TrendingUp } from "lucide-react"
@@ -19,38 +20,40 @@ import {
 } from "@/components/ui/chart"
 
 const chartConfig = {
-  producao: {
-    label: "Quantidade",
+  metalicos: {
+    label: "Metálicos",
     color: "hsl(var(--primary))",
   },
-  qualidade: {
-    label: "Assertividade",
+  plasticos: {
+    label: "Plásticos",
     color: "hsl(var(--chart-2))",
-  },
-  erros: {
-    label: "Erros",
-    color: "hsl(var(--destructive))",
   },
 } satisfies ChartConfig
 
-interface dataProps {
+interface DataProps {
   horario: string;
-  producao: number;
-  qualidade: number;
-  erros: number;
+  metalicos: number;
+  plasticos: number;
 }
 
-export default function PrincipalChart({ data, name, description }: { data: dataProps[], name: string, description: string; }) {
+export function ProductionChart({ data }: { data: DataProps[] }) {
+  // Transforma os dados para o formato esperado pelo ChartContainer
+  const chartData = data.map(item => ({
+    horario: item.horario,
+    producao: item.metalicos, // Reutiliza a chave 'producao' para metálicos
+    qualidade: item.plasticos, // Reutiliza a chave 'qualidade' para plásticos
+  }));
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardTitle>Produção de Materiais</CardTitle>
+        <CardDescription>Quantidade por tipo de material</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="w-[900px] h-[300px]">
           <LineChart
-            data={data}
+            data={chartData}
             margin={{
               top: 5,
               right: 30,
@@ -66,31 +69,20 @@ export default function PrincipalChart({ data, name, description }: { data: data
               tickMargin={8}
               interval={Math.floor(data.length / 6)}
             />
-            <YAxis yAxisId="left" orientation="left" />
-            <YAxis yAxisId="right" orientation="right" />
+            <YAxis />
             <ChartTooltip content={<ChartTooltipContent />} />
             <Line
-              yAxisId="left"
               type="monotone"
-              dataKey="producao"
+              dataKey="producao" 
               stroke="hsl(var(--chart-4))"
               strokeWidth={2}
               dot={false}
               activeDot={{ r: 6 }}
             />
             <Line
-              yAxisId="right"
               type="monotone"
               dataKey="qualidade"
               stroke="hsl(var(--chart-2))"
-              strokeWidth={2}
-              dot={false}
-            />
-            <Line
-              yAxisId="left"
-              type="monotone"
-              dataKey="erros"
-              stroke="hsl(var(--primary))"
               strokeWidth={2}
               dot={false}
             />
@@ -101,10 +93,10 @@ export default function PrincipalChart({ data, name, description }: { data: data
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              Dados em tempo real <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Showing production data for the last period
+              Comparação entre materiais metálicos e plásticos
             </div>
           </div>
         </div>

@@ -1,21 +1,27 @@
-import PrincipalChart  from "@/components/principalChart";
+// app/page.tsx
+import { ProductionChart } from "@/components/productionChart"
 
-const chartData = [
-  { schedule: "9:30", desktop: 186, mobile: 100 },
-  { schedule: "9h35", desktop: 305, mobile: 200 },
-  { schedule: "9h40", desktop: 237, mobile: 120 },
-  { schedule: "9h45", desktop: 73, mobile: 190 },
-  { schedule: "9h50", desktop: 209, mobile: 130 },
-  { schedule: "9h55", desktop: 500, mobile: 140 },
-]
+// Simulação de dados da API
+async function getProductionData() {
+  return [
+    { horario: "08:00", metalicos: 120, plasticos: 180 },
+    { horario: "08:05", metalicos: 150, plasticos: 170 },
+    { horario: "08:10", metalicos: 180, plasticos: 160 },
+    { horario: "08:15", metalicos: 140, plasticos: 190 },
+    { horario: "08:20", metalicos: 200, plasticos: 210 },
+    { horario: "08:25", metalicos: 220, plasticos: 200 },
+  ]
+}
 
-export default function Home() {
+export default async function Home() {
+  const productionData = await getProductionData()
+
   return (
     <div className="font-roboto pt-6">
-      Dashboard
-    <div className="w-82 p-10 pl-5" >
-      <PrincipalChart description="Janeiro 2025" name="Dados Gerais" data={chartData} />
+      <h1 className="px-10 text-2xl font-bold">Dashboard de Produção</h1>
+      <div className="p-10 pl-5">
+        <ProductionChart data={productionData} />
+      </div>
     </div>
-    </div>
-  );
+  )
 }
