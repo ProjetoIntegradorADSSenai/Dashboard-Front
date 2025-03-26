@@ -8,7 +8,7 @@ export function AppSidebar() {
               <SidebarGroupLabel>Kanedos</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {[" ", "Plasticos", "Metalicos"].map((item, index) => (
+                  {["Dashboard ", "Plasticos", "Metalicos"].map((item, index) => (
                     <SidebarMenuItem key={index}>
                       <SidebarMenuButton asChild>
                         <a href={`/${item}`}>

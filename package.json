@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "card": "^2.5.4",
+    "chart": "^0.1.2",
+    "recharts": "^2.15.1"
+  }
+}

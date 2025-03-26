@@ -20,11 +20,11 @@ import {
 
 const chartConfig = {
   producao: {
-    label: "Quantidade",
+    label: "Metálicos",
     color: "hsl(var(--primary))",
   },
   qualidade: {
-    label: "Assertividade",
+    label: "Plásticos",
     color: "hsl(var(--chart-2))",
   },
   erros: {
@@ -83,14 +83,6 @@ export default function PrincipalChart({ data, name, description }: { data: data
               type="monotone"
               dataKey="qualidade"
               stroke="hsl(var(--chart-2))"
-              strokeWidth={2}
-              dot={false}
-            />
-            <Line
-              yAxisId="left"
-              type="monotone"
-              dataKey="erros"
-              stroke="hsl(var(--primary))"
               strokeWidth={2}
               dot={false}
             />
