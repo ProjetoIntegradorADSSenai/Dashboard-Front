@@ -20,11 +20,11 @@ import {
 
 const chartConfig = {
   producao: {
-    label: "Metálicos",
+    label: "Qualidade",
     color: "hsl(var(--primary))",
   },
   qualidade: {
-    label: "Plásticos",
+    label: "Quantidade",
     color: "hsl(var(--chart-2))",
   },
   erros: {
@@ -34,13 +34,14 @@ const chartConfig = {
 } satisfies ChartConfig
 
 interface dataProps {
-  horario: string;
-  producao: number;
-  qualidade: number;
-  erros: number;
+  slug?: string;
+  name: string;
+  data: any;
+  description: string
 }
 
-export default function PrincipalChart({ data, name, description }: { data: dataProps[], name: string, description: string; }) {
+export default function PrincipalChart({ data, name, description, slug }: dataProps) {
+
   return (
     <Card>
       <CardHeader>
@@ -86,6 +87,16 @@ export default function PrincipalChart({ data, name, description }: { data: data
               strokeWidth={2}
               dot={false}
             />
+            { slug !== undefined &&
+            <Line
+              yAxisId="right"
+              type="monotone"
+              dataKey="erros"
+              stroke="hsl(var(--chart-1))"
+              strokeWidth={2}
+              dot={false}
+            />
+}
           </LineChart>
         </ChartContainer>
       </CardContent>

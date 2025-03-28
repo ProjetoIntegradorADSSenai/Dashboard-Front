@@ -1,4 +1,20 @@
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
+import { Button } from "./ui/button"
+import LogoutButton from "./LogoutButton"
+
+const navItens = [{
+  name : "Dashboard",
+  url : "/"
+},
+{
+  name : "Plasticos",
+  url : "/Plasticos"
+},
+{
+  name : "Metalicos",
+  url : "/Metalicos"
+},
+]
 
 export function AppSidebar() {
     return (
@@ -8,15 +24,18 @@ export function AppSidebar() {
               <SidebarGroupLabel>Kanedos</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {["Dashboard ", "Plasticos", "Metalicos"].map((item, index) => (
+                  {navItens.map((item, index) => (
                     <SidebarMenuItem key={index}>
                       <SidebarMenuButton asChild>
-                        <a href={`/${item}`}>
-                          <span>{item}</span>
+                        <a href={ `${item.url}`}>
+                          <span>{item.name}</span>
                         </a>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
+                  <SidebarMenuItem>
+                    <LogoutButton />
+                  </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>

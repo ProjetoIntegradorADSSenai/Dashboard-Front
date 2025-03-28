@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getServerSession } from "next-auth";
 
 // Tipos de materiais fixos que temos
 const MATERIALS = {
@@ -32,7 +33,7 @@ function calculateQuality(unidades: number, erros: number) {
 
 export default async function Home() {
   const productionData = await getProductionData();
-
+  const session = await getServerSession()
   
   const chartData = productionData.map(item => ({
     horario: item.horario,
@@ -61,7 +62,11 @@ export default async function Home() {
 
   return (
     <div className="font-roboto pt-6">
+      <div className="justify-between flex">
+
       <h1 className="px-10 text-2xl font-bold">Dashboard de Produção</h1>
+      <h1 className="px-10 text-2xl font-bold">Olá, {session?.user?.name}</h1>
+      </div>
       
       <div className="p-10 pl-5">
         <PrincipalChart 

@@ -58,7 +58,9 @@ const generateData = (slug: string, count: number = 12) => {
 };
 
 export default async function Home({ params }: { params: { slug: string } }) {
-  const slug = params.slug;
+  const slug = (await params).slug;
+
+
   const formatedSlug = slug.charAt(0).toUpperCase() + slug.slice(1);
   const { tableData, chartData } = generateData(slug);
 
@@ -69,6 +71,7 @@ export default async function Home({ params }: { params: { slug: string } }) {
         <PrincipalChart 
           name="Dados de Produção e Qualidade" 
           description={`Estatísticas de ${formatedSlug}`} 
+          slug={formatedSlug}
           data={chartData} 
         />
       </div>
