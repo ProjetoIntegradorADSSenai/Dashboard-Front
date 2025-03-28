@@ -57,9 +57,10 @@ const generateData = (slug: string, count: number = 12) => {
   return { tableData, chartData };
 };
 
-export default async function Home({ params }: { params: { slug: string } }) {
-  const slug = (await params).slug;
+type typeParams = Promise<{slug: string}>
 
+export default async function Home( props:  { params: typeParams} ) {
+  const { slug } = await props.params; 
 
   const formatedSlug = slug.charAt(0).toUpperCase() + slug.slice(1);
   const { tableData, chartData } = generateData(slug);
