@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 
 export default function LoginButton() {
     return (
-        <Button className="rounded-full p-6" onClick={() => signIn("google", {callbackUrl: "/"})}>
+        <Button className="rounded-full p-6" onClick={() => signIn("github", {callbackUrl: "/"})}>
             Entrar com o Google
         </Button>
     )
