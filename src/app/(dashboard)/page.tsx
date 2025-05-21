@@ -1,4 +1,5 @@
 import PrincipalChart from "@/components/principalChart";
+import Image from "next/image";
 import {
   Table,
   TableBody,
@@ -65,7 +66,20 @@ export default async function Home() {
       <div className="justify-between flex">
 
       <h1 className="px-10 text-2xl font-bold">Dashboard de Produção</h1>
+      <div className="justify-end flex items-center">
       <h1 className="px-10 text-2xl font-bold">Olá, {session?.user?.name}</h1>
+          {session?.user?.image && (
+            <Image
+              src={session.user.image}
+              alt="Profile"
+              width={60}
+              height={60}
+              className="rounded-full"
+              unoptimized={true}
+            />
+          )}
+      </div>
+     
       </div>
       
       <div className="p-10 pl-5">

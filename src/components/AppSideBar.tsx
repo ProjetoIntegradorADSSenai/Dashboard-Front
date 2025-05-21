@@ -1,5 +1,4 @@
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { Button } from "./ui/button"
 import LogoutButton from "./LogoutButton"
 
 const navItens = [{
@@ -14,15 +13,19 @@ const navItens = [{
   name: "Metálicos",
   url: "/Metalicos"
 },
+{
+  name: "Membros",
+  url: "/pages/membros"
+},
 ]
 
 export function AppSidebar() {
   return (
     <Sidebar className="w-[15%] m-0">
-      <SidebarContent>
+      <SidebarContent className="h-full flex flex-col justify-between">
         <SidebarGroup>
           <SidebarGroupLabel>Kanedos</SidebarGroupLabel>
-          <SidebarGroupContent>
+          <SidebarGroupContent className="flex-1">
             <SidebarMenu>
               {navItens.map((item, index) => (
                 <SidebarMenuItem key={index}>
@@ -33,13 +36,15 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              <SidebarMenuItem>
-                <LogoutButton />
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        <div className="p-4">
+          <LogoutButton />
+        </div>
       </SidebarContent>
     </Sidebar>
   )
 }
+ 

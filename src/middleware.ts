@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // Allowed routes
-  const allowedRoutes = ['/Plasticos', '/Metalicos', '/', '/auth/signin']
+  const allowedRoutes = ['/Plasticos', '/Metalicos', '/', '/auth/signin', '/pages/membros']
 
   if (allowedRoutes.includes(pathname)) {
     return NextResponse.next()
@@ -16,5 +16,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|favicon.ico|static|images).*)'],
+  matcher: ['/((?!_next|api|favicon.ico|static|img|images).*)'],
 }
