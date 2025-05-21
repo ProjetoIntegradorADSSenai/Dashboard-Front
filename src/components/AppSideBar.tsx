@@ -17,6 +17,10 @@ const navItens = [{
   name: "Membros",
   url: "/pages/membros"
 },
+{
+  name: "Tecnologias",
+  url: "/pages/tecnologias"
+},
 ]
 
 export function AppSidebar() {

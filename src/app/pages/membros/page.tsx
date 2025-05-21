@@ -1,4 +1,3 @@
-import Image from 'next/image';
 export default function TeamPage() {
   return (
     <div className="min-h-screen">
@@ -28,7 +27,7 @@ export default function TeamPage() {
                   />
                 </div>
                 <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-0.5 rounded-full text-xs font-bold">
-                  Front-end
+                  Front
                 </div>
               </div>
               <h2 className="text-xl font-bold text-white mb-1">Felipe Marques</h2>

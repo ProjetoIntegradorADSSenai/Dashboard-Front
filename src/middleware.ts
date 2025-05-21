@@ -5,7 +5,13 @@ export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // Allowed routes
-  const allowedRoutes = ['/Plasticos', '/Metalicos', '/', '/auth/signin', '/pages/membros']
+  const allowedRoutes = [
+    '/Plasticos', 
+    '/Metalicos', 
+    '/', 
+    '/auth/signin', 
+    '/pages/membros', 
+    '/pages/tecnologias']
 
   if (allowedRoutes.includes(pathname)) {
     return NextResponse.next()
