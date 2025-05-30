@@ -9,7 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ApiData } from "@/types/api-response";
 import { getServerSession } from "next-auth";
+import { get } from "http";
+import { getMaterials } from "@/services/Get-Materials";
+import { transform } from "next/dist/build/swc/generated-native";
+import { transformChartData } from "@/utils/transform-chart-data";
 
 // Tipos de materiais fixos que temos
 const MATERIALS = {
@@ -17,49 +22,82 @@ const MATERIALS = {
   PLASTICOS: "Plásticos"
 } as const;
 
-async function getProductionData() {
-  return [
-    { horario: "08:00", [MATERIALS.METALICOS]: 120, [MATERIALS.PLASTICOS]: 180, erros_metalicos: 5, erros_plasticos: 8 },
-    { horario: "08:05", [MATERIALS.METALICOS]: 150, [MATERIALS.PLASTICOS]: 170, erros_metalicos: 3, erros_plasticos: 7 },
-    { horario: "08:10", [MATERIALS.METALICOS]: 180, [MATERIALS.PLASTICOS]: 160, erros_metalicos: 6, erros_plasticos: 5 },
-    { horario: "08:15", [MATERIALS.METALICOS]: 140, [MATERIALS.PLASTICOS]: 190, erros_metalicos: 4, erros_plasticos: 9 },
-    { horario: "08:20", [MATERIALS.METALICOS]: 200, [MATERIALS.PLASTICOS]: 210, erros_metalicos: 7, erros_plasticos: 6 },
-    { horario: "08:25", [MATERIALS.METALICOS]: 220, [MATERIALS.PLASTICOS]: 200, erros_metalicos: 5, erros_plasticos: 8 },
-  ];
+const fakeData: ApiData[]= [];
+
+const start = new Date("2023-10-01T21:30:00");
+const totalSteps = 24; // total de pares (48 objetos no total)
+
+for (let i = 0; i < totalSteps; i++) {
+  const currentTime = new Date(start.getTime() + i * 5 * 60000); // incremento de 5 min
+  const time_interval = currentTime.toISOString().replace("T", " ").slice(0, 19);
+  const date = time_interval.slice(0, 10);
+  const time = time_interval.slice(11);
+
+  // METAL
+  fakeData.push({
+    peca_tipo: "metal",
+    time_interval,
+    date,
+    time,
+    total_separacoes: Math.floor(Math.random() * 50 + 50), // 50 a 99
+    avg_duration_seconds: Math.floor(Math.random() * 30 + 40), // 40 a 69
+    min_duration: Math.floor(Math.random() * 20 + 20), // 20 a 39
+    max_duration: Math.floor(Math.random() * 50 + 70), // 70 a 119
+  });
+
+  // PLASTICO
+  fakeData.push({
+    peca_tipo: "plastico",
+    time_interval,
+    date,
+    time,
+    total_separacoes: Math.floor(Math.random() * 50 + 50),
+    avg_duration_seconds: Math.floor(Math.random() * 30 + 40),
+    min_duration: Math.floor(Math.random() * 20 + 20),
+    max_duration: Math.floor(Math.random() * 50 + 70),
+
+
+  });
 }
+// const data = await getMaterials();
+
+const mergedData = transformChartData(fakeData);
 
 function calculateQuality(unidades: number, erros: number) {
   return Math.round(100 - (erros / unidades) * 100);
 }
 
 export default async function Home() {
-  const productionData = await getProductionData();
   const session = await getServerSession()
 
-  const chartData = productionData.map(item => ({
-    horario: item.horario,
-    producao: item[MATERIALS.METALICOS],
-    qualidade: item[MATERIALS.PLASTICOS],
+  const chartData = fakeData.map(item => ({
+    horario: item.time,
+    metalico: item.peca_tipo === "metal" ? item.total_separacoes : 0,
+    plastico: item.peca_tipo === "plastico" ? item.total_separacoes : 0,
+    tempo_medio: item.avg_duration_seconds,
     erros: 0
   }));
 
-
-  const tableDataMetalicos = productionData.map(item => ({
-    material: MATERIALS.METALICOS,
-    unidades: item[MATERIALS.METALICOS],
-    erros: item.erros_metalicos,
-    horario: item.horario,
-    qualidade: calculateQuality(item[MATERIALS.METALICOS], item.erros_metalicos)
+  const tableDataMetalicos = fakeData.filter(item => item.peca_tipo === "metal").map(item => ({
+    material: "Metálico",
+    unidades: item.total_separacoes,
+    tempo_medio: item.avg_duration_seconds,
+    duracao_minima: item.min_duration,
+    duracao_maxima: item.max_duration,
+    erros: "",
+    horario: item.time
   }));
 
-
-  const tableDataPlasticos = productionData.map(item => ({
-    material: MATERIALS.PLASTICOS,
-    unidades: item[MATERIALS.PLASTICOS],
-    erros: item.erros_plasticos,
-    horario: item.horario,
-    qualidade: calculateQuality(item[MATERIALS.PLASTICOS], item.erros_plasticos)
+  const tableDataPlasticos = fakeData.filter(item => item.peca_tipo === "plastico").map(item => ({
+    material: "Plástico",
+    unidades: item.total_separacoes,
+    tempo_medio: item.avg_duration_seconds,
+    duracao_minima: item.min_duration,
+    duracao_maxima: item.max_duration,
+    erros: "",
+    horario: item.time
   }));
+
 
   return (
     <div className="font-roboto pt-6">
@@ -88,7 +126,7 @@ export default async function Home() {
         <PrincipalChart
           name="Produção por Material"
           description={`${MATERIALS.METALICOS} (linha azul) e ${MATERIALS.PLASTICOS} (linha verde)`}
-          data={chartData}
+          data={mergedData}
         />
       </div>
 
@@ -99,9 +137,10 @@ export default async function Home() {
             <TableRow>
               <TableHead className="w-[100px]">Material</TableHead>
               <TableHead>Quantidade</TableHead>
-              <TableHead>Erros</TableHead>
+              <TableHead>Tempo Mínimo</TableHead>
+              <TableHead>Tempo Máximo</TableHead>
+              <TableHead>Tempo Médio</TableHead>
               <TableHead>Horário</TableHead>
-              <TableHead>Assertividade</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -109,9 +148,10 @@ export default async function Home() {
               <TableRow key={`metal-${index}`}>
                 <TableCell className="font-medium">{item.material}</TableCell>
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                <TableCell>{item.erros}</TableCell>
+                 <TableCell>{item.duracao_minima} seg.</TableCell>         
+                <TableCell>{item.duracao_maxima} seg.</TableCell>
+                <TableCell>{item.tempo_medio} seg.</TableCell>
                 <TableCell>{item.horario}</TableCell>
-                <TableCell>{item.qualidade}%</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -122,12 +162,13 @@ export default async function Home() {
         <Table>
           <TableCaption>Monitoramento de {MATERIALS.PLASTICOS}</TableCaption>
           <TableHeader>
-            <TableRow>
+            <TableRow >
               <TableHead className="w-[100px]">Material</TableHead>
               <TableHead>Quantidade</TableHead>
-              <TableHead>Erros</TableHead>
+               <TableHead>Tempo Mínimo</TableHead>
+              <TableHead>Tempo Máximo</TableHead>
+              <TableHead>Tempo Médio</TableHead>
               <TableHead>Horário</TableHead>
-              <TableHead>Assertividade</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -135,9 +176,11 @@ export default async function Home() {
               <TableRow key={`plastic-${index}`}>
                 <TableCell className="font-medium">{item.material}</TableCell>
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                <TableCell>{item.erros}</TableCell>
+                 <TableCell>{item.duracao_minima} seg.</TableCell>         
+                <TableCell>{item.duracao_maxima} seg.</TableCell>
+                <TableCell>{item.tempo_medio} seg.</TableCell>
                 <TableCell>{item.horario}</TableCell>
-                <TableCell>{item.qualidade}%</TableCell>
+
               </TableRow>
             ))}
           </TableBody>

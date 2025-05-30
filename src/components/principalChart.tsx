@@ -17,31 +17,31 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { ApiData } from "@/types/api-response"
 
 const chartConfig = {
-  producao: {
-    label: "Qualidade",
+  plastico: {
+    label: "Plástico",
     color: "hsl(var(--primary))",
   },
-  qualidade: {
-    label: "Quantidade",
+  metalico: {
+    label: "Metálico",
     color: "hsl(var(--chart-2))",
   },
-  erros: {
-    label: "Erros",
-    color: "hsl(var(--destructive))",
+  tempo_medio: {
+    label: "Tempo méd.",
+    color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig
 
 interface dataProps {
   slug?: string;
   name: string;
-  data: any;
+  data: any[];
   description: string
 }
 
 export default function PrincipalChart({ data, name, description, slug }: dataProps) {
-
   return (
     <Card>
       <CardHeader>
@@ -73,7 +73,7 @@ export default function PrincipalChart({ data, name, description, slug }: dataPr
             <Line
               yAxisId="left"
               type="monotone"
-              dataKey="producao"
+              dataKey="metalico"
               stroke="hsl(var(--chart-4))"
               strokeWidth={2}
               dot={false}
@@ -82,21 +82,19 @@ export default function PrincipalChart({ data, name, description, slug }: dataPr
             <Line
               yAxisId="right"
               type="monotone"
-              dataKey="qualidade"
+              dataKey="plastico"
               stroke="hsl(var(--chart-2))"
               strokeWidth={2}
               dot={false}
             />
-            { slug !== undefined &&
             <Line
               yAxisId="right"
               type="monotone"
-              dataKey="erros"
-              stroke="hsl(var(--chart-1))"
+              dataKey="tempo_medio"
+              stroke="hsl(var(--chart-3))"
               strokeWidth={2}
               dot={false}
             />
-}
           </LineChart>
         </ChartContainer>
       </CardContent>
