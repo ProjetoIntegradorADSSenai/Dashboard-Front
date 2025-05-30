@@ -8,9 +8,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import LogoutButton from "./LogoutButton"
 
-import { ChartLine, Recycle, Cog, Globe, Users } from "lucide-react"
+import LogoutButton from "./LogoutButton"
+import { ChartLine, Recycle, Cog, Globe, Users, LogOutIcon } from "lucide-react"
 
 const navItems = [
   { name: "Dashboard", url: "/", icon: ChartLine },
@@ -22,7 +22,7 @@ const navItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar collapsible="icon"> {/* Changed to "icon" mode */}
+    <Sidebar collapsible="icon">
       <SidebarContent className="h-full flex flex-col justify-between">
         <SidebarGroup>
           <SidebarGroupLabel>Kanedos</SidebarGroupLabel>
@@ -31,21 +31,28 @@ export function AppSidebar() {
               {navItems.map((item, index) => (
                 <SidebarMenuItem key={index}>
                   <SidebarMenuButton asChild tooltip={item.name}>
-                    <a href={item.url}>
+                    <a href={item.url} className="flex items-center gap-2">
                       <item.icon />
-                      <span>{item.name}</span>
+                      <span className="data-[collapsed=true]:hidden"> {item.name} </span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Sair">
+                  <LogoutButton className="flex items-center gap-2 w-full text-red-500">
+                    <LogOutIcon />
+                    <span className="data-[collapsed=true]:hidden">Sair</span>
+                  </LogoutButton>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <div className="p-4">
-          <LogoutButton />
-        </div>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
+

@@ -35,15 +35,15 @@ function calculateQuality(unidades: number, erros: number) {
 export default async function Home() {
   const productionData = await getProductionData();
   const session = await getServerSession()
-  
+
   const chartData = productionData.map(item => ({
     horario: item.horario,
-    producao: item[MATERIALS.METALICOS],  
-    qualidade: item[MATERIALS.PLASTICOS], 
+    producao: item[MATERIALS.METALICOS],
+    qualidade: item[MATERIALS.PLASTICOS],
     erros: 0
   }));
 
-  
+
   const tableDataMetalicos = productionData.map(item => ({
     material: MATERIALS.METALICOS,
     unidades: item[MATERIALS.METALICOS],
@@ -52,7 +52,7 @@ export default async function Home() {
     qualidade: calculateQuality(item[MATERIALS.METALICOS], item.erros_metalicos)
   }));
 
-  
+
   const tableDataPlasticos = productionData.map(item => ({
     material: MATERIALS.PLASTICOS,
     unidades: item[MATERIALS.PLASTICOS],
@@ -64,28 +64,31 @@ export default async function Home() {
   return (
     <div className="font-roboto pt-6">
       <div className="justify-between flex items-center">
-      <h1 className="px-10 text-2xl font-bold">Dashboard de Produção</h1>
-      <div className="flex items-center">
-      <h1 className="px-10 text-2xl font-bold">Olá, {session?.user?.name}</h1>
-          {session?.user?.image && (
-            <Image
-              src={session.user.image}
-              alt="Profile"
-              width={60}
-              height={60}
-              className="rounded-full"
-              unoptimized={true}
-            />
-          )}
+        <h1 className="px-10 text-2xl font-bold">Dashboard de Produção</h1>
+        <div className="flex items-center">
+          <div className="flex items-center gap-2 px-10">
+            <h1 className="text-2xl font-bold">Olá, {session?.user?.name}</h1>
+            {session?.user?.image && (
+              <Image
+                src={session.user.image}
+                alt="Profile"
+                width={60}
+                height={60}
+                className="rounded-full"
+                unoptimized={true}
+              />
+            )}
+
+          </div>
+        </div>
+
       </div>
-     
-      </div>
-      
+
       <div className="p-10 pl-5">
-        <PrincipalChart 
-          name="Produção por Material" 
-          description={`${MATERIALS.METALICOS} (linha azul) e ${MATERIALS.PLASTICOS} (linha verde)`} 
-          data={chartData} 
+        <PrincipalChart
+          name="Produção por Material"
+          description={`${MATERIALS.METALICOS} (linha azul) e ${MATERIALS.PLASTICOS} (linha verde)`}
+          data={chartData}
         />
       </div>
 

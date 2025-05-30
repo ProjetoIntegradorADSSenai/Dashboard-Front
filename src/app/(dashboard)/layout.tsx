@@ -11,7 +11,7 @@ export default async function Layout({ children }: Props) {
   if (!session?.user) return redirect("/auth/signin")
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen ms-16">
       <SidebarProvider>
         {session.user && (
           <>
