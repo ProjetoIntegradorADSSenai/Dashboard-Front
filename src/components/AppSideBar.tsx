@@ -22,7 +22,7 @@ const navItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" >
       <SidebarContent className="h-full flex flex-col justify-between">
         <SidebarGroup>
           <SidebarGroupLabel>Kanedos</SidebarGroupLabel>
