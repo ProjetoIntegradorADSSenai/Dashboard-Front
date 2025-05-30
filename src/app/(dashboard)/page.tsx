@@ -63,10 +63,9 @@ export default async function Home() {
 
   return (
     <div className="font-roboto pt-6">
-      <div className="justify-between flex">
-
+      <div className="justify-between flex items-center">
       <h1 className="px-10 text-2xl font-bold">Dashboard de Produção</h1>
-      <div className="justify-end flex items-center">
+      <div className="flex items-center">
       <h1 className="px-10 text-2xl font-bold">Olá, {session?.user?.name}</h1>
           {session?.user?.image && (
             <Image

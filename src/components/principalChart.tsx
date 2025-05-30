@@ -49,7 +49,7 @@ export default function PrincipalChart({ data, name, description, slug }: dataPr
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="w-[900px] h-[300px]">
+        <ChartContainer config={chartConfig} className="w-full h-[300px]">
           <LineChart
             data={data}
             margin={{

@@ -8,7 +8,8 @@ import {
   SiAmazon, 
   SiAwslambda, 
   SiMysql,
-  SiNodedotjs
+  SiNodedotjs,
+  SiNodered
 } from 'react-icons/si';
 
 export default function TechnologiesPage() {
@@ -76,7 +77,7 @@ export default function TechnologiesPage() {
     {
       name: 'Node-RED',
       description: 'Ferramenta de programação visual para conexão de dispositivos IoT',
-      icon: <SiNodedotjs className="w-full h-full" style={{ color: '#8f0000' }} />,
+      icon: <SiNodered className="w-full h-full" />,
       category: 'IoT'
     }
   ];
@@ -94,7 +95,7 @@ export default function TechnologiesPage() {
       </header>
 
       {/* Grid de tecnologias */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {technologies.map((tech, index) => (
             <div 

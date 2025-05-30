@@ -51,7 +51,7 @@ export function ProductionChart({ data }: { data: DataProps[] }) {
         <CardDescription>Quantidade por tipo de material</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="w-[900px] h-[300px]">
+        <ChartContainer config={chartConfig} className="w-full h-[300px]">
           <LineChart
             data={chartData}
             margin={{

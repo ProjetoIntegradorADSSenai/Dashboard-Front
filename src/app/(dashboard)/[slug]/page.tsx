@@ -66,8 +66,10 @@ export default async function Home( props:  { params: typeParams} ) {
   const { tableData, chartData } = generateData(slug);
 
   return (
-    <div className="font-roboto pt-6 max-w-screen-lg">
-      {formatedSlug}
+    <div className="font-roboto pt-6">
+      <div className="justify-between flex items-center px-10">
+      <h1 className="text-2xl font-bold">{formatedSlug}</h1>
+    </div>
       <div className="w-full p-10 pl-5">
         <PrincipalChart 
           name="Dados de Produção e Qualidade" 
