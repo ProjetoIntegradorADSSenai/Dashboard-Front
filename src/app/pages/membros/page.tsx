@@ -12,7 +12,7 @@ export default function TeamPage() {
       </header>
 
       {/* Grid de membros mantendo o estilo original mas com layout similar */}
-      <div className="max-w-7xl mx-auto px-10 py-6">
+      <div className="mx-auto px-10 py-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
           {/* Felipe Marques */}
