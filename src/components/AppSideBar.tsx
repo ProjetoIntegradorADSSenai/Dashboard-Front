@@ -1,22 +1,24 @@
-import { 
-  Sidebar, 
-  SidebarContent, 
-  SidebarGroup, 
-  SidebarGroupContent, 
-  SidebarGroupLabel, 
-  SidebarMenu, 
-  SidebarMenuButton, 
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger 
+  SidebarTrigger
 } from "@/components/ui/sidebar"
 import LogoutButton from "./LogoutButton"
 
+import { Calendar, Home, Inbox, Search, Settings, ChartLine, Recycle, Cog, Globe, Users } from "lucide-react"
+
 const navItems = [
-  { name: "Dashboard", url: "/" },
-  { name: "Plásticos", url: "/Plasticos" },
-  { name: "Metálicos", url: "/Metalicos" },
-  { name: "Membros", url: "/pages/membros" },
-  { name: "Tecnologias", url: "/pages/tecnologias" },
+  { name: "Dashboard", url: "/", icon: ChartLine },
+  { name: "Plásticos", url: "/Plasticos", icon: Recycle },
+  { name: "Metálicos", url: "/Metalicos", icon: Cog },
+  { name: "Tecnologias", url: "/pages/tecnologias", icon: Globe },
+  { name: "Membros", url: "/pages/membros", icon: Users },
 ]
 
 export function AppSidebar() {
@@ -31,6 +33,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={index}>
                   <SidebarMenuButton asChild tooltip={item.name}>
                     <a href={item.url}>
+                      <item.icon />
                       <span>{item.name}</span>
                     </a>
                   </SidebarMenuButton>
