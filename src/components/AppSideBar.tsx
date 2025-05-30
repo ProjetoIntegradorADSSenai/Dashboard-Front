@@ -7,11 +7,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger
 } from "@/components/ui/sidebar"
 import LogoutButton from "./LogoutButton"
 
-import { Calendar, Home, Inbox, Search, Settings, ChartLine, Recycle, Cog, Globe, Users } from "lucide-react"
+import { ChartLine, Recycle, Cog, Globe, Users } from "lucide-react"
 
 const navItems = [
   { name: "Dashboard", url: "/", icon: ChartLine },
