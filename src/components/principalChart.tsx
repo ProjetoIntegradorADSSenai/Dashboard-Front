@@ -17,7 +17,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import { ApiData } from "@/types/api-response"
 
 const chartConfig = {
   plastico: {
@@ -42,6 +41,7 @@ interface dataProps {
 }
 
 export default function PrincipalChart({ data, name, description, slug }: dataProps) {
+  console.log("Data received in PrincipalChart:", data);
   return (
     <Card>
       <CardHeader>

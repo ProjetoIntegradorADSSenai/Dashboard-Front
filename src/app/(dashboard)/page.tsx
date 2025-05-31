@@ -9,12 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ApiData } from "@/types/api-response";
+import type {  ListaAgrupada, SeparacaoItem } from "@/types/api-response";
 import { getServerSession } from "next-auth";
 import { get } from "http";
 import { getMaterials } from "@/services/Get-Materials";
-import { transform } from "next/dist/build/swc/generated-native";
-import { transformChartData } from "@/utils/transform-chart-data";
 
 // Tipos de materiais fixos que temos
 const MATERIALS = {
@@ -22,82 +20,81 @@ const MATERIALS = {
   PLASTICOS: "Plásticos"
 } as const;
 
-const fakeData: ApiData[]= [];
 
-const start = new Date("2023-10-01T21:30:00");
-const totalSteps = 24; // total de pares (48 objetos no total)
+const data = await getMaterials();
+  
+const chartData = (data: ListaAgrupada) =>
+  data.map((grupo: SeparacaoItem[]) => {
+    const itemMetal = grupo.find(item => item.peca_tipo === "metal");
+    const itemPlastico = grupo.find(item => item.peca_tipo === "plastico");
 
-for (let i = 0; i < totalSteps; i++) {
-  const currentTime = new Date(start.getTime() + i * 5 * 60000); // incremento de 5 min
-  const time_interval = currentTime.toISOString().replace("T", " ").slice(0, 19);
-  const date = time_interval.slice(0, 10);
-  const time = time_interval.slice(11);
-
-  // METAL
-  fakeData.push({
-    peca_tipo: "metal",
-    time_interval,
-    date,
-    time,
-    total_separacoes: Math.floor(Math.random() * 50 + 50), // 50 a 99
-    avg_duration_seconds: Math.floor(Math.random() * 30 + 40), // 40 a 69
-    min_duration: Math.floor(Math.random() * 20 + 20), // 20 a 39
-    max_duration: Math.floor(Math.random() * 50 + 70), // 70 a 119
+    return {
+      horario: grupo[0]?.time ?? "",
+      metálico: itemMetal?.total_separacoes ?? 0,
+      plástico: itemPlastico?.total_separacoes ?? 0,
+      erros: 0, // ou outro campo se necessário
+    };
   });
 
-  // PLASTICO
-  fakeData.push({
-    peca_tipo: "plastico",
-    time_interval,
-    date,
-    time,
-    total_separacoes: Math.floor(Math.random() * 50 + 50),
-    avg_duration_seconds: Math.floor(Math.random() * 30 + 40),
-    min_duration: Math.floor(Math.random() * 20 + 20),
-    max_duration: Math.floor(Math.random() * 50 + 70),
 
-
-  });
-}
-// const data = await getMaterials();
-
-const mergedData = transformChartData(fakeData);
 
 function calculateQuality(unidades: number, erros: number) {
   return Math.round(100 - (erros / unidades) * 100);
 }
 
 export default async function Home() {
-  const session = await getServerSession()
+  const session = await getServerSession();
+  const data = await getMaterials();
 
-  const chartData = fakeData.map(item => ({
-    horario: item.time,
-    metalico: item.peca_tipo === "metal" ? item.total_separacoes : 0,
-    plastico: item.peca_tipo === "plastico" ? item.total_separacoes : 0,
-    tempo_medio: item.avg_duration_seconds,
-    erros: 0
-  }));
+  const chartData = data.map((grupo) => {
+    const itemMetal = grupo.find((item) => item.peca_tipo === "metal");
+    const itemPlastico = grupo.find((item) => item.peca_tipo === "plastico");
 
-  const tableDataMetalicos = fakeData.filter(item => item.peca_tipo === "metal").map(item => ({
-    material: "Metálico",
-    unidades: item.total_separacoes,
-    tempo_medio: item.avg_duration_seconds,
-    duracao_minima: item.min_duration,
-    duracao_maxima: item.max_duration,
-    erros: "",
-    horario: item.time
-  }));
+    const tempo_medio =
+  itemMetal && itemPlastico
+    ? (Number(itemMetal.avg_duration_seconds) + Number(itemPlastico.avg_duration_seconds)) / 2
+    : itemMetal
+    ? Number(itemMetal.avg_duration_seconds)
+    : itemPlastico
+    ? Number(itemPlastico.avg_duration_seconds)
+    
+    : 0;
 
-  const tableDataPlasticos = fakeData.filter(item => item.peca_tipo === "plastico").map(item => ({
-    material: "Plástico",
-    unidades: item.total_separacoes,
-    tempo_medio: item.avg_duration_seconds,
-    duracao_minima: item.min_duration,
-    duracao_maxima: item.max_duration,
-    erros: "",
-    horario: item.time
-  }));
+    
+    return {
+      horario: grupo[0]?.time ?? "",
+      metalico: itemMetal?.total_separacoes ?? 0,
+      plastico: itemPlastico?.total_separacoes ?? 0,
+      tempo_medio: tempo_medio,
+      erros: 0,
+    };
+  });
 
+  const tableDataMetalicos = data
+    .map((grupo) => grupo.find((item) => item.peca_tipo === "metal"))
+    .filter(Boolean)
+    .map((item) => ({
+      material: "Metálico",
+      unidades: item!.total_separacoes,
+      tempo_medio: item!.avg_duration_seconds,
+      duracao_minima: item!.min_duration,
+      duracao_maxima: item!.max_duration,
+      erros: "",
+      horario: item!.time,
+    }));
+
+  const tableDataPlasticos = data
+    .map((grupo) => grupo.find((item) => item.peca_tipo === "plastico"))
+    .filter(Boolean)
+    .map((item) => ({
+      material: "Plástico",
+      unidades: item!.total_separacoes,
+      tempo_medio: item!.avg_duration_seconds,
+      duracao_minima: item!.min_duration,
+      duracao_maxima: item!.max_duration,
+      erros: "",
+      horario: item!.time,
+    }));
 
   return (
     <div className="font-roboto pt-6">
@@ -116,17 +113,15 @@ export default async function Home() {
                 unoptimized={true}
               />
             )}
-
           </div>
         </div>
-
       </div>
 
       <div className="p-10 pl-5">
         <PrincipalChart
           name="Produção por Material"
           description={`${MATERIALS.METALICOS} (linha azul) e ${MATERIALS.PLASTICOS} (linha verde)`}
-          data={mergedData}
+          data={chartData}
         />
       </div>
 
@@ -144,11 +139,11 @@ export default async function Home() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tableDataMetalicos.map((item, index) => (
+            {tableDataMetalicos.slice(0, 10).map((item, index) => (
               <TableRow key={`metal-${index}`}>
                 <TableCell className="font-medium">{item.material}</TableCell>
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                 <TableCell>{item.duracao_minima} seg.</TableCell>         
+                <TableCell>{item.duracao_minima} seg.</TableCell>
                 <TableCell>{item.duracao_maxima} seg.</TableCell>
                 <TableCell>{item.tempo_medio} seg.</TableCell>
                 <TableCell>{item.horario}</TableCell>
@@ -162,25 +157,24 @@ export default async function Home() {
         <Table>
           <TableCaption>Monitoramento de {MATERIALS.PLASTICOS}</TableCaption>
           <TableHeader>
-            <TableRow >
+            <TableRow>
               <TableHead className="w-[100px]">Material</TableHead>
               <TableHead>Quantidade</TableHead>
-               <TableHead>Tempo Mínimo</TableHead>
+              <TableHead>Tempo Mínimo</TableHead>
               <TableHead>Tempo Máximo</TableHead>
               <TableHead>Tempo Médio</TableHead>
               <TableHead>Horário</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tableDataPlasticos.map((item, index) => (
+            {tableDataPlasticos.slice(0, 10).map((item, index) => (
               <TableRow key={`plastic-${index}`}>
                 <TableCell className="font-medium">{item.material}</TableCell>
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                 <TableCell>{item.duracao_minima} seg.</TableCell>         
+                <TableCell>{item.duracao_minima} seg.</TableCell>
                 <TableCell>{item.duracao_maxima} seg.</TableCell>
                 <TableCell>{item.tempo_medio} seg.</TableCell>
                 <TableCell>{item.horario}</TableCell>
-
               </TableRow>
             ))}
           </TableBody>
