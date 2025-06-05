@@ -1,4 +1,3 @@
-// components/productionChart.tsx
 "use client"
 
 import { TrendingUp } from "lucide-react"
@@ -20,40 +19,40 @@ import {
 } from "@/components/ui/chart"
 
 const chartConfig = {
-  metalicos: {
-    label: "Metálicos",
-    color: "hsl(var(--primary))",
+  unidades: {
+    label: "Unidades",
+    color: "hsl(var(--chart-4))",
   },
-  plasticos: {
-    label: "Plásticos",
-    color: "hsl(var(--chart-2))",
+  tempo_medio: {
+    label: "Tempo médio",
+    color: "hsl(var(--chart-3))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
+
 
 interface DataProps {
-  horario: string;
-  metalicos: number;
-  plasticos: number;
+  name: string;
+  description: string;
+  slug?: string;
+  data: {
+    horario: string;
+    unidades: number;
+    tempo_medio: number;
+    erros?: number;
+  }[];
 }
 
-export function ProductionChart({ data }: { data: DataProps[] }) {
-  // Transforma os dados para o formato esperado pelo ChartContainer
-  const chartData = data.map(item => ({
-    horario: item.horario,
-    producao: item.metalicos, // Reutiliza a chave 'producao' para metálicos
-    qualidade: item.plasticos, // Reutiliza a chave 'qualidade' para plásticos
-  }));
-
+export function ProductionChart({ data, name, description, slug }: DataProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Produção de Materiais</CardTitle>
-        <CardDescription>Quantidade por tipo de material</CardDescription>
+        <CardTitle>{name}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="w-full h-[300px]">
           <LineChart
-            data={chartData}
+            data={data}
             margin={{
               top: 5,
               right: 30,
@@ -62,27 +61,30 @@ export function ProductionChart({ data }: { data: DataProps[] }) {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis 
+            <XAxis
               dataKey="horario"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               interval={Math.floor(data.length / 6)}
             />
-            <YAxis />
+            <YAxis yAxisId="left" orientation="left" />
+            <YAxis yAxisId="right" orientation="right" />
             <ChartTooltip content={<ChartTooltipContent />} />
             <Line
+              yAxisId="left"
               type="monotone"
-              dataKey="producao" 
+              dataKey="unidades"
               stroke="hsl(var(--chart-4))"
               strokeWidth={2}
               dot={false}
               activeDot={{ r: 6 }}
             />
             <Line
+              yAxisId="right"
               type="monotone"
-              dataKey="qualidade"
-              stroke="hsl(var(--chart-2))"
+              dataKey="tempo_medio"
+              stroke="hsl(var(--chart-3))"
               strokeWidth={2}
               dot={false}
             />
@@ -93,14 +95,14 @@ export function ProductionChart({ data }: { data: DataProps[] }) {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Dados em tempo real <TrendingUp className="h-4 w-4" />
+              Dados de {slug} em tempo real <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Comparação entre materiais metálicos e plásticos
+              Análise de Unidades e Tempo Médio de Separação
             </div>
           </div>
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

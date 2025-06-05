@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/table";
 import type {  ListaAgrupada, SeparacaoItem } from "@/types/api-response";
 import { getServerSession } from "next-auth";
-import { get } from "http";
 import { getMaterials } from "@/services/Get-Materials";
 
 // Tipos de materiais fixos que temos
@@ -32,15 +31,9 @@ const chartData = (data: ListaAgrupada) =>
       horario: grupo[0]?.time ?? "",
       metálico: itemMetal?.total_separacoes ?? 0,
       plástico: itemPlastico?.total_separacoes ?? 0,
-      erros: 0, // ou outro campo se necessário
+      erros: 0, 
     };
   });
-
-
-
-function calculateQuality(unidades: number, erros: number) {
-  return Math.round(100 - (erros / unidades) * 100);
-}
 
 export default async function Home() {
   const session = await getServerSession();

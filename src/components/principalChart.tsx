@@ -41,7 +41,6 @@ interface dataProps {
 }
 
 export default function PrincipalChart({ data, name, description, slug }: dataProps) {
-  console.log("Data received in PrincipalChart:", data);
   return (
     <Card>
       <CardHeader>

@@ -1,5 +1,4 @@
-// app/[slug]/page.tsx
-import PrincipalChart from "@/components/principalChart";
+import { ProductionChart } from "@/components/productionChart";
 import {
   Table,
   TableBody,
@@ -9,98 +8,84 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getMaterials } from "@/services/Get-Materials";
+import type { SeparacaoItem } from "@/types/api-response";
 
-const generateRandomTime = () => {
-  const hour = Math.floor(Math.random() * 10) + 8;
-  const minute = Math.floor(Math.random() * 12) * 5;
-  return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+type ParamsType = {
+  params: {
+    slug: string;
+  };
 };
 
-const generateTimeSeries = (count: number) => {
-  const startTime = generateRandomTime();
-  const [startHour, startMinute] = startTime.split(':').map(Number);
-  
-  return Array.from({ length: count }, (_, i) => {
-    const totalMinutes = startHour * 60 + startMinute + i * 5;
-    const hour = Math.floor(totalMinutes / 60) % 24;
-    const minute = totalMinutes % 60;
-    return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-  });
+const slugMap: Record<string, string> = {
+  plasticos: "plastico",
+  metalicos: "metal",
 };
 
-const generateData = (slug: string, count: number = 12) => {
-  const productTypes = ['Reciclável', 'Não-reciclável', 'Perigoso', 'Orgânico', 'Industrial'];
-  const timeSeries = generateTimeSeries(count);
-  
-  const tableData = Array.from({ length: count }, (_, index) => {
-    const unidades = Math.floor(Math.random() * 1000) + 100;
-    const erros = Math.floor(Math.random() * 50);
-    const qualidade = 100 - Math.floor((erros / unidades) * 100);
-    
-    return {
-      produto: `${slug.charAt(0).toUpperCase() + slug.slice(1)}`,
-      unidades,
-      erros,
-      qualidade,
-      tipo: productTypes[Math.floor(Math.random() * productTypes.length)],
-      horario: timeSeries[index],
-    };
-  });
+export default async function Home({ params }: ParamsType) {
+  const rawSlug = params.slug.toLowerCase();
+  const tipoMaterial = slugMap[rawSlug] || rawSlug;
 
-  const chartData = tableData.map(item => ({
-    horario: item.horario,
-    producao: item.unidades,
-    qualidade: item.qualidade,
-    erros: item.erros,
+  const dadosOriginais = await getMaterials();
+  const flatData = dadosOriginais.flat();
+
+  const dadosFiltrados = flatData.filter(
+    (item) => item.peca_tipo === tipoMaterial
+  );
+
+  const formatedSlug =
+    tipoMaterial === "plastico"
+      ? "Plástico"
+      : tipoMaterial === "metalico"
+      ? "Metálico"
+      : tipoMaterial.charAt(0).toUpperCase() + tipoMaterial.slice(1);
+
+  const chartData = dadosFiltrados.map((item) => ({
+    horario: item.time,
+    unidades: item.total_separacoes,
+    tempo_medio: Math.abs(Number(item.avg_duration_seconds)) || 0,
+    erros: 0,
   }));
 
-  return { tableData, chartData };
-};
-
-type typeParams = Promise<{slug: string}>
-
-export default async function Home( props:  { params: typeParams} ) {
-  const { slug } = await props.params; 
-
-  const formatedSlug = slug.charAt(0).toUpperCase() + slug.slice(1);
-  const { tableData, chartData } = generateData(slug);
+  const tableData = dadosFiltrados.map((item) => ({
+    unidades: item.total_separacoes,
+    tempo_medio: item.avg_duration_seconds,
+    duracao_minima: item.min_duration,
+    duracao_maxima: item.max_duration,
+    horario: item.time,
+  }));
 
   return (
     <div className="font-roboto pt-6">
       <div className="justify-between flex items-center px-10">
-      <h1 className="text-2xl font-bold">{formatedSlug}</h1>
-    </div>
+        <h1 className="text-2xl font-bold">{formatedSlug}</h1>
+      </div>
+
       <div className="w-full p-10 pl-5">
-        <PrincipalChart 
-          name="Dados de Produção e Qualidade" 
-          description={`Estatísticas de ${formatedSlug}`} 
+        <ProductionChart
+          name={`Dados de Produção - ${formatedSlug}`}
+          description={`Estatísticas de peças do tipo ${formatedSlug}`}
           slug={formatedSlug}
-          data={chartData} 
+          data={chartData}
         />
       </div>
 
       <div className="w-full p-10 pl-5">
         <Table>
-          <TableCaption>Lista de monitoramento</TableCaption>
+          <TableCaption>Monitoramento de {formatedSlug}</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Produto</TableHead>
               <TableHead>Unidades</TableHead>
-              <TableHead>Erros</TableHead>
-              <TableHead>Tipo</TableHead>
+              <TableHead>Tempo Médio</TableHead>
               <TableHead>Horário</TableHead>
-              <TableHead>Assertividade (%)</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {tableData.map((item, index) => (
               <TableRow key={index}>
-                <TableCell className="font-medium">{item.produto}</TableCell>
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                <TableCell>{item.erros}</TableCell>
-                <TableCell>{item.tipo}</TableCell>
+                <TableCell>{item.tempo_medio} seg.</TableCell>
                 <TableCell>{item.horario}</TableCell>
-                <TableCell>{item.qualidade}%</TableCell>
               </TableRow>
             ))}
           </TableBody>
