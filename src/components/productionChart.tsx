@@ -37,7 +37,6 @@ interface DataProps {
   data: {
     horario: string;
     unidades: number;
-    tempo_medio: number;
     erros?: number;
   }[];
 }

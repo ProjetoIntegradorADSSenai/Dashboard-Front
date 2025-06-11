@@ -10,18 +10,18 @@ import {
 } from "@/components/ui/table";
 import { getMaterials } from "@/services/Get-Materials";
 
-type ParamsType = {
-  params: {
-    slug: string;
-  };
-};
-
 const slugMap: Record<string, string> = {
   plasticos: "plastico",
   metalicos: "metal",
 };
 
-export default async function Home({ params }: ParamsType) {
+type Params = Promise<{ slug: string }>
+
+
+
+export default async function Home(props: { params: Params }) {
+
+  const params = await props.params;
   const rawSlug = params.slug.toLowerCase();
   const tipoMaterial = slugMap[rawSlug] || rawSlug;
 
@@ -42,15 +42,11 @@ export default async function Home({ params }: ParamsType) {
   const chartData = dadosFiltrados.map((item) => ({
     horario: item.time,
     unidades: item.total_separacoes,
-    tempo_medio: Math.abs(Number(item.avg_duration_seconds)) || 0,
     erros: 0,
   }));
 
   const tableData = dadosFiltrados.map((item) => ({
     unidades: item.total_separacoes,
-    tempo_medio: item.avg_duration_seconds,
-    duracao_minima: item.min_duration,
-    duracao_maxima: item.max_duration,
     horario: item.time,
   }));
 
@@ -75,15 +71,13 @@ export default async function Home({ params }: ParamsType) {
           <TableHeader>
             <TableRow>
               <TableHead>Unidades</TableHead>
-              <TableHead>Tempo Médio</TableHead>
-              <TableHead>Horário</TableHead>
+              <TableHead>Horários</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {tableData.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                <TableCell>{item.tempo_medio} seg.</TableCell>
                 <TableCell>{item.horario}</TableCell>
               </TableRow>
             ))}

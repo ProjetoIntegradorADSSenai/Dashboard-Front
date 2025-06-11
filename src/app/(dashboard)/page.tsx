@@ -26,25 +26,16 @@ export default async function Home() {
     const itemMetal = grupo.find((item) => item.peca_tipo === "metal");
     const itemPlastico = grupo.find((item) => item.peca_tipo === "plastico");
 
-    const tempo_medio =
-      itemMetal && itemPlastico
-        ? (Number(itemMetal.avg_duration_seconds) + Number(itemPlastico.avg_duration_seconds)) / 2
-        : itemMetal
-          ? Number(itemMetal.avg_duration_seconds)
-          : itemPlastico
-            ? Number(itemPlastico.avg_duration_seconds)
-
-            : 0;
 
 
     return {
       horario: grupo[0]?.time ?? "",
       metalico: itemMetal?.total_separacoes ?? 0,
       plastico: itemPlastico?.total_separacoes ?? 0,
-      tempo_medio: tempo_medio,
       erros: 0,
     };
   });
+
 
   const tableDataMetalicos = data
     .map((grupo) => grupo.find((item) => item.peca_tipo === "metal"))
@@ -52,11 +43,10 @@ export default async function Home() {
     .map((item) => ({
       material: "Metálico",
       unidades: item!.total_separacoes,
-      tempo_medio: item!.avg_duration_seconds,
-      duracao_minima: item!.min_duration,
-      duracao_maxima: item!.max_duration,
       erros: "",
       horario: item!.time,
+      intervalo_tempo: item!.time_interval,
+      dia: item!.date,
     }));
 
   const tableDataPlasticos = data
@@ -65,11 +55,10 @@ export default async function Home() {
     .map((item) => ({
       material: "Plástico",
       unidades: item!.total_separacoes,
-      tempo_medio: item!.avg_duration_seconds,
-      duracao_minima: item!.min_duration,
-      duracao_maxima: item!.max_duration,
       erros: "",
       horario: item!.time,
+      intervalo_tempo: item!.time_interval,
+      dia: item!.date,
     }));
 
   return (
@@ -108,10 +97,9 @@ export default async function Home() {
             <TableRow>
               <TableHead className="w-[100px]">Material</TableHead>
               <TableHead>Quantidade</TableHead>
-              <TableHead>Tempo Mínimo</TableHead>
-              <TableHead>Tempo Máximo</TableHead>
-              <TableHead>Tempo Médio</TableHead>
-              <TableHead>Horário</TableHead>
+              <TableHead>Horários</TableHead>
+              <TableHead>Intervalo de Tempo</TableHead>
+              <TableHead>Data</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -119,10 +107,9 @@ export default async function Home() {
               <TableRow key={`metal-${index}`}>
                 <TableCell className="font-medium">{item.material}</TableCell>
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                <TableCell>{item.duracao_minima} seg.</TableCell>
-                <TableCell>{item.duracao_maxima} seg.</TableCell>
-                <TableCell>{item.tempo_medio} seg.</TableCell>
                 <TableCell>{item.horario}</TableCell>
+                <TableCell>{item.intervalo_tempo}</TableCell>
+                <TableCell>{item.dia}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -136,10 +123,9 @@ export default async function Home() {
             <TableRow>
               <TableHead className="w-[100px]">Material</TableHead>
               <TableHead>Quantidade</TableHead>
-              <TableHead>Tempo Mínimo</TableHead>
-              <TableHead>Tempo Máximo</TableHead>
-              <TableHead>Tempo Médio</TableHead>
-              <TableHead>Horário</TableHead>
+              <TableHead>Horários</TableHead>
+              <TableHead>Intervalo de Tempo</TableHead>
+              <TableHead>Data</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -147,10 +133,9 @@ export default async function Home() {
               <TableRow key={`plastic-${index}`}>
                 <TableCell className="font-medium">{item.material}</TableCell>
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                <TableCell>{item.duracao_minima} seg.</TableCell>
-                <TableCell>{item.duracao_maxima} seg.</TableCell>
-                <TableCell>{item.tempo_medio} seg.</TableCell>
                 <TableCell>{item.horario}</TableCell>
+                <TableCell>{item.intervalo_tempo}</TableCell>
+                <TableCell>{item.dia}</TableCell>
               </TableRow>
             ))}
           </TableBody>
