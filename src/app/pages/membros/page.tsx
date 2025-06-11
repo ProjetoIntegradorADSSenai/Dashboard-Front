@@ -1,7 +1,7 @@
 export default function TeamPage() {
   return (
-    <div className="min-h-screen">
-      {/* Cabeçalho futurista */}
+    <div className="min-h-screen ms-12">
+      {/* Cabeçalho */}
       <header className="pt-16 pb-12 text-center">
         <h1 className="text-5xl font-bold text-white mb-4">
           Nossa Equipe
@@ -11,10 +11,10 @@ export default function TeamPage() {
         </p>
       </header>
 
-      {/* Grid de membros mantendo o estilo original mas com layout similar */}
+      {/* Grid de membros */}
       <div className="mx-auto px-10 py-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          
+
           {/* Felipe Marques */}
           <div className="opacity-75 rounded-lg overflow-hidden border border-gray-700">
             <div className="p-6 flex flex-col items-center">
@@ -51,8 +51,8 @@ export default function TeamPage() {
             <div className="p-6 flex flex-col items-center">
               <div className="relative mb-4">
                 <div className="w-24 h-24 rounded-full border-4 border-gray-600 overflow-hidden">
-                  <img 
-                    src="/img/gabriel.jpeg" 
+                  <img
+                    src="/img/gabriel.jpeg"
                     alt="Gabriel Ribeiro"
                     className="w-full h-full object-cover"
                   />
@@ -82,8 +82,8 @@ export default function TeamPage() {
             <div className="p-6 flex flex-col items-center">
               <div className="relative mb-4">
                 <div className="w-24 h-24 rounded-full border-4 border-gray-600 overflow-hidden">
-                  <img 
-                    src="/img/luciano.jpeg" 
+                  <img
+                    src="/img/luciano.jpeg"
                     alt="Luciano"
                     className="w-full h-full object-cover"
                   />
@@ -113,8 +113,8 @@ export default function TeamPage() {
             <div className="p-6 flex flex-col items-center">
               <div className="relative mb-4">
                 <div className="w-24 h-24 rounded-full border-4 border-gray-600 overflow-hidden">
-                  <img 
-                    src="/img/giovani.jpeg" 
+                  <img
+                    src="/img/giovani.jpeg"
                     alt="Giovani"
                     className="w-full h-full object-cover"
                   />
@@ -144,8 +144,8 @@ export default function TeamPage() {
             <div className="p-6 flex flex-col items-center">
               <div className="relative mb-4">
                 <div className="w-24 h-24 rounded-full border-4 border-gray-600 overflow-hidden">
-                  <img 
-                    src="/img/faria.png" 
+                  <img
+                    src="/img/faria.png"
                     alt="Gabriel Faria"
                     className="w-full h-full object-cover"
                   />
@@ -178,8 +178,8 @@ export default function TeamPage() {
             <div className="p-6 flex flex-col items-center">
               <div className="relative mb-4">
                 <div className="w-24 h-24 rounded-full border-4 border-gray-600 overflow-hidden">
-                  <img 
-                    src="/img/camargo.png" 
+                  <img
+                    src="/img/camargo.png"
                     alt="Guilherme Camargo"
                     className="w-full h-full object-cover"
                   />
@@ -212,8 +212,8 @@ export default function TeamPage() {
             <div className="p-6 flex flex-col items-center">
               <div className="relative mb-4">
                 <div className="w-24 h-24 rounded-full border-4 border-gray-600 overflow-hidden">
-                  <img 
-                    src="/img/kaneda.png" 
+                  <img
+                    src="/img/kaneda.png"
                     alt="Guilherme Camargo"
                     className="w-full h-full object-cover"
                   />
@@ -246,8 +246,8 @@ export default function TeamPage() {
             <div className="p-6 flex flex-col items-center">
               <div className="relative mb-4">
                 <div className="w-24 h-24 rounded-full border-4 border-gray-600 overflow-hidden">
-                  <img 
-                    src="/img/tomas.jpeg" 
+                  <img
+                    src="/img/tomas.jpeg"
                     alt="Guilherme Camargo"
                     className="w-full h-full object-cover"
                   />
@@ -277,8 +277,8 @@ export default function TeamPage() {
             <div className="p-6 flex flex-col items-center">
               <div className="relative mb-4">
                 <div className="w-24 h-24 rounded-full border-4 border-gray-600 overflow-hidden">
-                  <img 
-                    src="/img/joao.jpeg" 
+                  <img
+                    src="/img/joao.jpeg"
                     alt="Foto"
                     className="w-full h-full object-cover"
                   />

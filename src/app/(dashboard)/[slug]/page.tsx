@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getMaterials } from "@/services/Get-Materials";
-import type { SeparacaoItem } from "@/types/api-response";
 
 type ParamsType = {
   params: {
@@ -37,8 +36,8 @@ export default async function Home({ params }: ParamsType) {
     tipoMaterial === "plastico"
       ? "Plástico"
       : tipoMaterial === "metalico"
-      ? "Metálico"
-      : tipoMaterial.charAt(0).toUpperCase() + tipoMaterial.slice(1);
+        ? "Metálico"
+        : tipoMaterial.charAt(0).toUpperCase() + tipoMaterial.slice(1);
 
   const chartData = dadosFiltrados.map((item) => ({
     horario: item.time,

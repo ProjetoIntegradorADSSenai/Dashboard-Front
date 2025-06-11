@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type {  ListaAgrupada, SeparacaoItem } from "@/types/api-response";
 import { getServerSession } from "next-auth";
 import { getMaterials } from "@/services/Get-Materials";
 
@@ -18,22 +17,6 @@ const MATERIALS = {
   METALICOS: "Metálicos",
   PLASTICOS: "Plásticos"
 } as const;
-
-
-const data = await getMaterials();
-  
-const chartData = (data: ListaAgrupada) =>
-  data.map((grupo: SeparacaoItem[]) => {
-    const itemMetal = grupo.find(item => item.peca_tipo === "metal");
-    const itemPlastico = grupo.find(item => item.peca_tipo === "plastico");
-
-    return {
-      horario: grupo[0]?.time ?? "",
-      metálico: itemMetal?.total_separacoes ?? 0,
-      plástico: itemPlastico?.total_separacoes ?? 0,
-      erros: 0, 
-    };
-  });
 
 export default async function Home() {
   const session = await getServerSession();
@@ -44,16 +27,16 @@ export default async function Home() {
     const itemPlastico = grupo.find((item) => item.peca_tipo === "plastico");
 
     const tempo_medio =
-  itemMetal && itemPlastico
-    ? (Number(itemMetal.avg_duration_seconds) + Number(itemPlastico.avg_duration_seconds)) / 2
-    : itemMetal
-    ? Number(itemMetal.avg_duration_seconds)
-    : itemPlastico
-    ? Number(itemPlastico.avg_duration_seconds)
-    
-    : 0;
+      itemMetal && itemPlastico
+        ? (Number(itemMetal.avg_duration_seconds) + Number(itemPlastico.avg_duration_seconds)) / 2
+        : itemMetal
+          ? Number(itemMetal.avg_duration_seconds)
+          : itemPlastico
+            ? Number(itemPlastico.avg_duration_seconds)
 
-    
+            : 0;
+
+
     return {
       horario: grupo[0]?.time ?? "",
       metalico: itemMetal?.total_separacoes ?? 0,

@@ -1,14 +1,13 @@
-import { 
-  SiNextdotjs, 
-  SiReact, 
-  SiExpo, 
-  SiFlask, 
-  SiPython, 
-  SiTailwindcss, 
-  SiAmazon, 
-  SiAwslambda, 
+import {
+  SiNextdotjs,
+  SiReact,
+  SiExpo,
+  SiFlask,
+  SiPython,
+  SiTailwindcss,
+  SiAmazon,
+  SiAwslambda,
   SiMysql,
-  SiNodedotjs,
   SiNodered
 } from 'react-icons/si';
 
@@ -83,7 +82,7 @@ export default function TechnologiesPage() {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen ms-12">
       {/* Cabeçalho */}
       <header className="pt-20 pb-12 text-center">
         <h1 className="text-5xl font-bold text-white mb-4">
@@ -98,7 +97,7 @@ export default function TechnologiesPage() {
       <div className="mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {technologies.map((tech, index) => (
-            <div 
+            <div
               key={index}
               className="rounded-lg overflow-hidden border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20"
             >
