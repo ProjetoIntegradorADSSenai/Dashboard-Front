@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/AppSideBar"
+import { Chatbot } from "@/components/ui/chatbot"
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
@@ -21,6 +22,7 @@ export default async function Layout({ children }: Props) {
             </div>
             <SidebarInset className="flex-1 overflow-auto">
               {children}
+              <Chatbot />
             </SidebarInset>
           </>
         )}
