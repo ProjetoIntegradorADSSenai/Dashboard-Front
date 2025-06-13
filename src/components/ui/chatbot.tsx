@@ -17,6 +17,7 @@ export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // Sample bot welcome message
@@ -38,8 +39,8 @@ export function Chatbot() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const handleSendMessage = () => {
-    if (inputValue.trim() === '') return
+  const handleSendMessage = async () => {
+    if (inputValue.trim() === '' || isLoading) return
 
     // Add user message
     const userMessage: Message = {
@@ -50,24 +51,47 @@ export function Chatbot() {
     }
     setMessages((prev) => [...prev, userMessage])
     setInputValue('')
+    setIsLoading(true)
 
-    // Simulate bot response
-    setTimeout(() => {
-      const botResponses = [
-        "I understand your question about that.",
-        "Let me check that for you.",
-        "Here's what I found regarding your query.",
-        "That's an interesting question!",
-        "I'll need more information to help with that.",
-      ]
+    try {
+      // Call the API endpoint
+      const response = await fetch(process.env.NEXT_PUBLIC_CHATBOT_API_URL || '', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: inputValue
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to get response from chatbot')
+      }
+
+      const data = await response.json()
+      
+      // Add bot response (assuming the API returns a text response)
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: botResponses[Math.floor(Math.random() * botResponses.length)],
+        text: data.response || "I received your message but didn't get a proper response.",
         sender: 'bot',
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, botMessage])
-    }, 1000)
+    } catch (error) {
+      console.error('Error calling chatbot API:', error)
+      
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "Sorry, I'm having trouble connecting to the service. Please try again later.",
+        sender: 'bot',
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -114,7 +138,7 @@ export function Chatbot() {
         <div className="flex w-full flex-1 flex-col rounded-b-lg border border-t-0 bg-background shadow-lg overflow-hidden">
           {/* Messages container with proper scrolling */}
           <div 
-            className="flex-1 overflow-y-auto p-4 overflow-x-hidden" // Added overflow-x-hidden here
+            className="flex-1 overflow-y-auto p-4 overflow-x-hidden"
             style={{
               maxHeight: 'calc(100% - 72px)',
               minHeight: '100px'
@@ -135,27 +159,39 @@ export function Chatbot() {
                 </div>
               </div>
             ))}
+            {isLoading && (
+              <div className="flex justify-start mb-4">
+                <div className="max-w-[85%] rounded-lg px-4 py-2 text-base bg-muted">
+                  Thinking...
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
           {/* Fixed input area that stays at the bottom */}
-          <div className="border-t p-3 bg-background w-full"> {/* Added w-full here */}
-            <div className="flex gap-2 w-full"> {/* Added w-full here */}
+          <div className="border-t p-3 bg-background w-full">
+            <div className="flex gap-2 w-full">
               <input
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="Type your message..."
-                className="flex-1 rounded border px-4 py-3 text-base text-black focus:outline-none focus:ring-1 focus:ring-primary w-full" // Added w-full here
+                className="flex-1 rounded border px-4 py-3 text-base text-black focus:outline-none focus:ring-1 focus:ring-primary w-full"
+                disabled={isLoading}
               />
               <Button
                 onClick={handleSendMessage}
-                disabled={inputValue.trim() === ''}
+                disabled={inputValue.trim() === '' || isLoading}
                 size="sm"
-                className="h-12 w-12 p-0 flex-shrink-0" // Added flex-shrink-0 here
+                className="h-12 w-12 p-0 flex-shrink-0"
               >
-                <SendHorizonal className="h-5 w-5" />
+                {isLoading ? (
+                  <div className="h-5 w-5 animate-spin">↻</div>
+                ) : (
+                  <SendHorizonal className="h-5 w-5" />
+                )}
               </Button>
             </div>
           </div>
