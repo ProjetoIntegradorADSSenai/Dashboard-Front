@@ -1,21 +1,14 @@
 import PrincipalChart from "@/components/principalChart";
 import Image from "next/image";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { getServerSession } from "next-auth";
 import { getMaterials } from "@/services/Get-Materials";
+import DashboardTable from "@/components/DashboardTable"
 
 // Tipos de materiais fixos que temos
 const MATERIALS = {
   METALICOS: "Metálicos",
-  PLASTICOS: "Plásticos"
+  PLASTICOS: "Plásticos",
+  DESCARTE: "Descarte"
 } as const;
 
 export default async function Home() {
@@ -25,6 +18,7 @@ export default async function Home() {
   const chartData = data.map((grupo) => {
     const itemMetal = grupo.find((item) => item.peca_tipo === "metal");
     const itemPlastico = grupo.find((item) => item.peca_tipo === "plastico");
+    const itemDescarte = grupo.find((item) => item.peca_tipo === "lixo");
 
 
 
@@ -32,6 +26,7 @@ export default async function Home() {
       horario: grupo[0]?.time ?? "",
       metalico: itemMetal?.total_separacoes ?? 0,
       plastico: itemPlastico?.total_separacoes ?? 0,
+      descarte: itemDescarte?.total_separacoes ?? 0,
       erros: 0,
     };
   });
@@ -54,6 +49,18 @@ export default async function Home() {
     .filter(Boolean)
     .map((item) => ({
       material: "Plástico",
+      unidades: item!.total_separacoes,
+      erros: "",
+      horario: item!.time,
+      intervalo_tempo: item!.time_interval,
+      dia: item!.date,
+    }));
+
+  const tableDataDescarte = data
+    .map((grupo) => grupo.find((item) => item.peca_tipo === "lixo"))
+    .filter(Boolean)
+    .map((item) => ({
+      material: "Descarte",
       unidades: item!.total_separacoes,
       erros: "",
       horario: item!.time,
@@ -85,62 +92,14 @@ export default async function Home() {
       <div className="p-10 pl-5">
         <PrincipalChart
           name="Produção por Material"
-          description={`${MATERIALS.METALICOS} (linha azul) e ${MATERIALS.PLASTICOS} (linha verde)`}
+          description={`${MATERIALS.METALICOS} (linha roxa), ${MATERIALS.PLASTICOS} (linha verde) e ${MATERIALS.DESCARTE} (linha laranja)`}
           data={chartData}
         />
       </div>
 
-      <div className="w-full p-10 pl-5">
-        <Table>
-          <TableCaption>Monitoramento de {MATERIALS.METALICOS}</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Material</TableHead>
-              <TableHead>Quantidade</TableHead>
-              <TableHead>Horários</TableHead>
-              <TableHead>Intervalo de Tempo</TableHead>
-              <TableHead>Data</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {tableDataMetalicos.slice(0, 10).map((item, index) => (
-              <TableRow key={`metal-${index}`}>
-                <TableCell className="font-medium">{item.material}</TableCell>
-                <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                <TableCell>{item.horario}</TableCell>
-                <TableCell>{item.intervalo_tempo}</TableCell>
-                <TableCell>{item.dia}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      <div className="w-full p-10 pl-5">
-        <Table>
-          <TableCaption>Monitoramento de {MATERIALS.PLASTICOS}</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Material</TableHead>
-              <TableHead>Quantidade</TableHead>
-              <TableHead>Horários</TableHead>
-              <TableHead>Intervalo de Tempo</TableHead>
-              <TableHead>Data</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {tableDataPlasticos.slice(0, 10).map((item, index) => (
-              <TableRow key={`plastic-${index}`}>
-                <TableCell className="font-medium">{item.material}</TableCell>
-                <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                <TableCell>{item.horario}</TableCell>
-                <TableCell>{item.intervalo_tempo}</TableCell>
-                <TableCell>{item.dia}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      <DashboardTable name={MATERIALS.METALICOS} data={tableDataMetalicos}></DashboardTable>
+      <DashboardTable name={MATERIALS.PLASTICOS} data={tableDataPlasticos}></DashboardTable>
+      <DashboardTable name={MATERIALS.DESCARTE} data={tableDataDescarte}></DashboardTable>
     </div>
   );
 }
