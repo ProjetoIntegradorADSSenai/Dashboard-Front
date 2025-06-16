@@ -47,7 +47,7 @@ export default async function Home() {
       intervalo_tempo: item!.time_interval,
       dia: item!.date,
     }))
-    .reverse(); // <- inverte aqui
+    .reverse();
 
   const tableDataPlasticos = data
     .map((grupo) => grupo.find((item) => item.peca_tipo === "plastico"))
@@ -60,7 +60,7 @@ export default async function Home() {
       intervalo_tempo: item!.time_interval,
       dia: item!.date,
     }))
-    .reverse(); // <- inverte aqui também
+    .reverse();
 
 
   return (
