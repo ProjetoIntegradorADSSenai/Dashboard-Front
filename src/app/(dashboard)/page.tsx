@@ -11,11 +11,15 @@ import {
 } from "@/components/ui/table";
 import { getServerSession } from "next-auth";
 import { getMaterials } from "@/services/Get-Materials";
+import { generateTableData } from "@/utils/generate-table-data";
+import { formatDate } from "@/utils/format-date";
+import { formatDateTime } from "@/utils/format-date-time";
 
 // Tipos de materiais fixos que temos
 const MATERIALS = {
   METALICOS: "Metálicos",
-  PLASTICOS: "Plásticos"
+  PLASTICOS: "Plásticos",
+  LIXO: "Lixo"
 } as const;
 
 export default async function Home() {
@@ -25,6 +29,7 @@ export default async function Home() {
   const chartData = data.map((grupo) => {
     const itemMetal = grupo.find((item) => item.peca_tipo === "metal");
     const itemPlastico = grupo.find((item) => item.peca_tipo === "plastico");
+    const itemLixo = grupo.find((item) => item.peca_tipo === "lixo");
 
 
 
@@ -32,34 +37,15 @@ export default async function Home() {
       horario: grupo[0]?.time ?? "",
       metalico: itemMetal?.total_separacoes ?? 0,
       plastico: itemPlastico?.total_separacoes ?? 0,
+      lixo: itemLixo?.total_separacoes ?? 0,
       erros: 0,
     };
   });
 
 
-  const tableDataMetalicos = data
-    .map((grupo) => grupo.find((item) => item.peca_tipo === "metal"))
-    .filter(Boolean)
-    .map((item) => ({
-      material: "Metálico",
-      unidades: item!.total_separacoes,
-      erros: "",
-      horario: item!.time,
-      intervalo_tempo: item!.time_interval,
-      dia: item!.date,
-    }));
-
-  const tableDataPlasticos = data
-    .map((grupo) => grupo.find((item) => item.peca_tipo === "plastico"))
-    .filter(Boolean)
-    .map((item) => ({
-      material: "Plástico",
-      unidades: item!.total_separacoes,
-      erros: "",
-      horario: item!.time,
-      intervalo_tempo: item!.time_interval,
-      dia: item!.date,
-    }));
+  const tableDataMetalicos = generateTableData(data, "metal", "Metálico");
+  const tableDataPlasticos = generateTableData(data, "plastico", "Plástico");
+  const tableDataLixo = generateTableData(data, "lixo", "Lixo");
 
   return (
     <div className="font-roboto pt-6">
@@ -109,7 +95,7 @@ export default async function Home() {
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
                 <TableCell>{item.horario}</TableCell>
                 <TableCell>{item.intervalo_tempo}</TableCell>
-                <TableCell>{item.dia}</TableCell>
+                <TableCell>{formatDate(item.dia)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -125,8 +111,7 @@ export default async function Home() {
               <TableHead>Quantidade</TableHead>
               <TableHead>Horários</TableHead>
               <TableHead>Intervalo de Tempo</TableHead>
-              <TableHead>Data</TableHead>
-            </TableRow>
+              <TableHead>Data</TableHead> </TableRow>
           </TableHeader>
           <TableBody>
             {tableDataPlasticos.slice(0, 10).map((item, index) => (
@@ -134,13 +119,40 @@ export default async function Home() {
                 <TableCell className="font-medium">{item.material}</TableCell>
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
                 <TableCell>{item.horario}</TableCell>
-                <TableCell>{item.intervalo_tempo}</TableCell>
-                <TableCell>{item.dia}</TableCell>
+                <TableCell>{formatDateTime(item.intervalo_tempo)}</TableCell>
+                <TableCell>{formatDate(item.dia)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
+
+      <div className="w-full p-10 pl-5">
+        <Table>
+          <TableCaption>Monitoramento de {MATERIALS.LIXO}</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Material</TableHead>
+              <TableHead>Quantidade</TableHead>
+              <TableHead>Horários</TableHead>
+              <TableHead>Intervalo de Tempo</TableHead>
+              <TableHead>Data</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tableDataLixo.slice(0, 10).map((item, index) => (
+              <TableRow key={`plastic-${index}`}>
+                <TableCell className="font-medium">{item.material}</TableCell>
+                <TableCell>{item.unidades.toLocaleString()}</TableCell>
+                <TableCell>{item.horario}</TableCell>
+                <TableCell>{formatDateTime(item.intervalo_tempo)}</TableCell>
+                <TableCell>{formatDate(item.dia)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
     </div>
   );
 }

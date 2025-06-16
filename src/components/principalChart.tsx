@@ -27,6 +27,10 @@ const chartConfig = {
     label: "Metálico",
     color: "hsl(var(--chart-2))",
   },
+  lixo: {
+    label: "Lixo",
+    color: "hsl(var(--chart-4))",
+  },
   tempo_medio: {
     label: "Tempo méd.",
     color: "hsl(var(--chart-3))",
@@ -59,7 +63,7 @@ export default function PrincipalChart({ data, name, description, slug }: dataPr
             }}
           >
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis 
+            <XAxis
               dataKey="horario"
               tickLine={false}
               axisLine={false}
@@ -89,6 +93,14 @@ export default function PrincipalChart({ data, name, description, slug }: dataPr
             <Line
               yAxisId="right"
               type="monotone"
+              dataKey="lixo"
+              stroke="hsl(var(--chart-5))"
+              strokeWidth={2}
+              dot={false}
+            />
+            <Line
+              yAxisId="right"
+              type="monotone"
               dataKey="tempo_medio"
               stroke="hsl(var(--chart-3))"
               strokeWidth={2}
@@ -101,10 +113,10 @@ export default function PrincipalChart({ data, name, description, slug }: dataPr
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              Dados gerais em tempo real <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Showing production data for the last period
+              Análise de Unidades e Tempo Médio de Separação
             </div>
           </div>
         </div>
