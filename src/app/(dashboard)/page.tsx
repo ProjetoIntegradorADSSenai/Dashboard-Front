@@ -14,6 +14,7 @@ import { getMaterials } from "@/services/Get-Materials";
 import { generateTableData } from "@/utils/generate-table-data";
 import { formatDate } from "@/utils/format-date";
 import { formatDateTime } from "@/utils/format-date-time";
+import DashboardTable from "@/components/DashboardTable";
 
 // Tipos de materiais fixos que temos
 const MATERIALS = {
@@ -76,82 +77,9 @@ export default async function Home() {
         />
       </div>
 
-      <div className="w-full p-10 pl-5">
-        <Table>
-          <TableCaption>Monitoramento de {MATERIALS.METALICOS}</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Material</TableHead>
-              <TableHead>Quantidade</TableHead>
-              <TableHead>Horários</TableHead>
-              <TableHead>Intervalo de Tempo</TableHead>
-              <TableHead>Data</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {tableDataMetalicos.slice(0, 10).map((item, index) => (
-              <TableRow key={`metal-${index}`}>
-                <TableCell className="font-medium">{item.material}</TableCell>
-                <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                <TableCell>{item.horario}</TableCell>
-                <TableCell>{item.intervalo_tempo}</TableCell>
-                <TableCell>{formatDate(item.dia)}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      <div className="w-full p-10 pl-5">
-        <Table>
-          <TableCaption>Monitoramento de {MATERIALS.PLASTICOS}</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Material</TableHead>
-              <TableHead>Quantidade</TableHead>
-              <TableHead>Horários</TableHead>
-              <TableHead>Intervalo de Tempo</TableHead>
-              <TableHead>Data</TableHead> </TableRow>
-          </TableHeader>
-          <TableBody>
-            {tableDataPlasticos.slice(0, 10).map((item, index) => (
-              <TableRow key={`plastic-${index}`}>
-                <TableCell className="font-medium">{item.material}</TableCell>
-                <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                <TableCell>{item.horario}</TableCell>
-                <TableCell>{formatDateTime(item.intervalo_tempo)}</TableCell>
-                <TableCell>{formatDate(item.dia)}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      <div className="w-full p-10 pl-5">
-        <Table>
-          <TableCaption>Monitoramento de {MATERIALS.DESCARTE}</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Material</TableHead>
-              <TableHead>Quantidade</TableHead>
-              <TableHead>Horários</TableHead>
-              <TableHead>Intervalo de Tempo</TableHead>
-              <TableHead>Data</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {tableDataLixo.slice(0, 10).map((item, index) => (
-              <TableRow key={`plastic-${index}`}>
-                <TableCell className="font-medium">{item.material}</TableCell>
-                <TableCell>{item.unidades.toLocaleString()}</TableCell>
-                <TableCell>{item.horario}</TableCell>
-                <TableCell>{formatDateTime(item.intervalo_tempo)}</TableCell>
-                <TableCell>{formatDate(item.dia)}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      <DashboardTable name={MATERIALS.METALICOS} data={tableDataMetalicos}></DashboardTable>
+      <DashboardTable name={MATERIALS.PLASTICOS} data={tableDataPlasticos}></DashboardTable>
+      <DashboardTable name={MATERIALS.DESCARTE} data={tableDataLixo}></DashboardTable>
 
     </div>
   );
