@@ -189,7 +189,7 @@ export function Chatbot() {
                   {message.text === '[table]' && message.dataType === 'partition' && Array.isArray(message.data) ? (
                     <table className="w-full text-sm text-left border">
                       <thead>
-                        <tr className="bg-gray-200 border-b">
+                        <tr className="bg-black border-b">
                           <th className="px-2 py-1">Peça</th>
                           <th className="px-2 py-1">Hora</th>
                           <th className="px-2 py-1">Qtd</th>
