@@ -36,7 +36,6 @@ export default async function Home() {
     };
   });
 
-
   const tableDataMetalicos = data
     .map((grupo) => grupo.find((item) => item.peca_tipo === "metal"))
     .filter(Boolean)
@@ -47,7 +46,8 @@ export default async function Home() {
       horario: item!.time,
       intervalo_tempo: item!.time_interval,
       dia: item!.date,
-    }));
+    }))
+    .reverse(); // <- inverte aqui
 
   const tableDataPlasticos = data
     .map((grupo) => grupo.find((item) => item.peca_tipo === "plastico"))
@@ -59,7 +59,9 @@ export default async function Home() {
       horario: item!.time,
       intervalo_tempo: item!.time_interval,
       dia: item!.date,
-    }));
+    }))
+    .reverse(); // <- inverte aqui também
+
 
   return (
     <div className="font-roboto pt-6">
