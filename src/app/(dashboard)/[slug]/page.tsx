@@ -64,7 +64,7 @@ export default async function Home(props: { params: Params }) {
     unidades: item.total_separacoes,
     horario: item.time,
     dia: item.date,
-  }));
+  })).reverse();
 
   return (
     <div className="font-roboto pt-6">
@@ -106,7 +106,7 @@ export default async function Home(props: { params: Params }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tableData.map((item, index) => (
+            {tableData.slice(0, 10).map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
                 <TableCell>{item.horario}</TableCell>

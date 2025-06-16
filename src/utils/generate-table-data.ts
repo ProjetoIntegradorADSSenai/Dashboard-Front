@@ -32,6 +32,6 @@ export function generateTableData(
       horario: item!.time,
       intervalo_tempo: item!.time_interval,
       dia: item!.date,
-    }));
+    })).reverse();
 }
 
