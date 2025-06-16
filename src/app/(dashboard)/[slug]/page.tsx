@@ -16,13 +16,13 @@ import Image from 'next/image';
 const slugMap: Record<string, string> = {
   plasticos: "plastico",
   metalicos: "metal",
-  lixo: "lixo",
+  descarte: "lixo",
 };
 
 const formatedSlugMap: Record<string, string> = {
   plastico: "Plástico",
   metalico: "Metálico",
-  lixo: "Lixo",
+  lixo: "Descarte",
 };
 
 
@@ -50,6 +50,9 @@ export default async function Home(props: { params: Params }) {
   const dadosFiltrados = flatData.filter(
     (item) => item.peca_tipo === tipoMaterial
   );
+
+  console.log([...new Set(flatData.map(item => item.peca_tipo))]);
+
 
   const chartData = dadosFiltrados.map((item) => ({
     horario: item.time,

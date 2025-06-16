@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   const allowedRoutes = [
     '/Plasticos',
     '/Metalicos',
-    '/Lixo',
+    '/Descarte',
     '/',
     '/auth/signin',
     '/pages/membros',

@@ -27,8 +27,8 @@ const chartConfig = {
     label: "Metálico",
     color: "hsl(var(--chart-2))",
   },
-  lixo: {
-    label: "Lixo",
+  descarte: {
+    label: "Descarte",
     color: "hsl(var(--chart-4))",
   },
   tempo_medio: {
@@ -93,7 +93,7 @@ export default function PrincipalChart({ data, name, description, slug }: dataPr
             <Line
               yAxisId="right"
               type="monotone"
-              dataKey="lixo"
+              dataKey="descarte"
               stroke="hsl(var(--chart-5))"
               strokeWidth={2}
               dot={false}

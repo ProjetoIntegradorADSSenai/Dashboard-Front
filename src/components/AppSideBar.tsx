@@ -16,7 +16,7 @@ const navItems = [
   { name: "Dashboard", url: "/", icon: ChartLine },
   { name: "Plásticos", url: "/Plasticos", icon: Recycle },
   { name: "Metálicos", url: "/Metalicos", icon: Cog },
-  { name: "Lixo", url: "/Lixo", icon: Trash },
+  { name: "Descarte", url: "/Descarte", icon: Trash },
   { name: "Tecnologias", url: "/pages/tecnologias", icon: Globe },
   { name: "Membros", url: "/pages/membros", icon: Users },
 ]

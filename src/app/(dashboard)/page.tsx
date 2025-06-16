@@ -19,7 +19,7 @@ import { formatDateTime } from "@/utils/format-date-time";
 const MATERIALS = {
   METALICOS: "Metálicos",
   PLASTICOS: "Plásticos",
-  LIXO: "Lixo"
+  DESCARTE: "Descarte"
 } as const;
 
 export default async function Home() {
@@ -37,7 +37,7 @@ export default async function Home() {
       horario: grupo[0]?.time ?? "",
       metalico: itemMetal?.total_separacoes ?? 0,
       plastico: itemPlastico?.total_separacoes ?? 0,
-      lixo: itemLixo?.total_separacoes ?? 0,
+      descarte: itemLixo?.total_separacoes ?? 0,
       erros: 0,
     };
   });
@@ -45,7 +45,7 @@ export default async function Home() {
 
   const tableDataMetalicos = generateTableData(data, "metal", "Metálico");
   const tableDataPlasticos = generateTableData(data, "plastico", "Plástico");
-  const tableDataLixo = generateTableData(data, "lixo", "Lixo");
+  const tableDataLixo = generateTableData(data, "lixo", "Descarte");
 
   return (
     <div className="font-roboto pt-6">
@@ -129,7 +129,7 @@ export default async function Home() {
 
       <div className="w-full p-10 pl-5">
         <Table>
-          <TableCaption>Monitoramento de {MATERIALS.LIXO}</TableCaption>
+          <TableCaption>Monitoramento de {MATERIALS.DESCARTE}</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Material</TableHead>
