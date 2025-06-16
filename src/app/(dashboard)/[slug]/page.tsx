@@ -9,21 +9,40 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getMaterials } from "@/services/Get-Materials";
+import { formatDate } from "@/utils/format-date";
+import { getServerSession } from "next-auth";
+import Image from 'next/image';
 
 const slugMap: Record<string, string> = {
   plasticos: "plastico",
   metalicos: "metal",
+  descarte: "lixo",
 };
+
+const formatedSlugMap: Record<string, string> = {
+  plastico: "Plástico",
+  metalico: "Metálico",
+  lixo: "Descarte",
+};
+
+
+
 
 type Params = Promise<{ slug: string }>
 
 
 
 export default async function Home(props: { params: Params }) {
+  const session = await getServerSession();
+
 
   const params = await props.params;
   const rawSlug = params.slug.toLowerCase();
   const tipoMaterial = slugMap[rawSlug] || rawSlug;
+
+  const formatedSlug =
+    formatedSlugMap[tipoMaterial] ||
+    tipoMaterial.charAt(0).toUpperCase() + tipoMaterial.slice(1);
 
   const dadosOriginais = await getMaterials();
   const flatData = dadosOriginais.flat();
@@ -32,12 +51,8 @@ export default async function Home(props: { params: Params }) {
     (item) => item.peca_tipo === tipoMaterial
   );
 
-  const formatedSlug =
-    tipoMaterial === "plastico"
-      ? "Plástico"
-      : tipoMaterial === "metalico"
-        ? "Metálico"
-        : tipoMaterial.charAt(0).toUpperCase() + tipoMaterial.slice(1);
+  console.log([...new Set(flatData.map(item => item.peca_tipo))]);
+
 
   const chartData = dadosFiltrados.map((item) => ({
     horario: item.time,
@@ -48,12 +63,27 @@ export default async function Home(props: { params: Params }) {
   const tableData = dadosFiltrados.map((item) => ({
     unidades: item.total_separacoes,
     horario: item.time,
+    dia: item.date,
   }));
 
   return (
     <div className="font-roboto pt-6">
-      <div className="justify-between flex items-center px-10">
-        <h1 className="text-2xl font-bold">{formatedSlug}</h1>
+      <div className="justify-between flex items-center">
+        <h1 className="px-10 text-2xl font-bold">{formatedSlug}</h1>
+        <div className="flex items-center gap-2 px-10">
+          <h1 className="text-2xl font-bold">Olá, {session?.user?.name}</h1>
+          {session?.user?.image && (
+            <Image
+              src={session.user.image}
+              alt="Profile"
+              width={60}
+              height={60}
+              className="rounded-full"
+              unoptimized={true}
+            />
+          )}
+        </div>
+
       </div>
 
       <div className="w-full p-10 pl-5">
@@ -72,6 +102,7 @@ export default async function Home(props: { params: Params }) {
             <TableRow>
               <TableHead>Unidades</TableHead>
               <TableHead>Horários</TableHead>
+              <TableHead>Dia</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -79,6 +110,7 @@ export default async function Home(props: { params: Params }) {
               <TableRow key={index}>
                 <TableCell>{item.unidades.toLocaleString()}</TableCell>
                 <TableCell>{item.horario}</TableCell>
+                <TableCell>{formatDate(item.dia)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

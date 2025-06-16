@@ -10,12 +10,13 @@ import {
 } from "@/components/ui/sidebar"
 
 import LogoutButton from "./LogoutButton"
-import { ChartLine, Recycle, Cog, Globe, Users, LogOutIcon } from "lucide-react"
+import { ChartLine, Recycle, Cog, Globe, Users, LogOutIcon, Trash } from "lucide-react"
 
 const navItems = [
   { name: "Dashboard", url: "/", icon: ChartLine },
   { name: "Plásticos", url: "/Plasticos", icon: Recycle },
   { name: "Metálicos", url: "/Metalicos", icon: Cog },
+  { name: "Descarte", url: "/Descarte", icon: Trash },
   { name: "Tecnologias", url: "/pages/tecnologias", icon: Globe },
   { name: "Membros", url: "/pages/membros", icon: Users },
 ]
@@ -25,7 +26,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" >
       <SidebarContent className="h-full flex flex-col justify-between">
         <SidebarGroup>
-          <SidebarGroupLabel>Kanedos</SidebarGroupLabel>
+          <SidebarGroupLabel>Projeto Integrador</SidebarGroupLabel>
           <SidebarGroupContent className="flex-1">
             <SidebarMenu>
               {navItems.map((item, index) => (

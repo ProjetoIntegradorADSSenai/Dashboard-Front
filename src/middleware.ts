@@ -6,11 +6,12 @@ export function middleware(request: NextRequest) {
 
   // Allowed routes
   const allowedRoutes = [
-    '/Plasticos', 
-    '/Metalicos', 
-    '/', 
-    '/auth/signin', 
-    '/pages/membros', 
+    '/Plasticos',
+    '/Metalicos',
+    '/Descarte',
+    '/',
+    '/auth/signin',
+    '/pages/membros',
     '/pages/tecnologias']
 
   if (allowedRoutes.includes(pathname)) {
