@@ -1,19 +1,8 @@
 import PrincipalChart from "@/components/principalChart";
 import Image from "next/image";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { getServerSession } from "next-auth";
 import { getMaterials } from "@/services/Get-Materials";
 import { generateTableData } from "@/utils/generate-table-data";
-import { formatDate } from "@/utils/format-date";
-import { formatDateTime } from "@/utils/format-date-time";
 import DashboardTable from "@/components/DashboardTable";
 
 // Tipos de materiais fixos que temos
@@ -72,7 +61,7 @@ export default async function Home() {
       <div className="p-10 pl-5">
         <PrincipalChart
           name="Produção por Material"
-          description={`${MATERIALS.METALICOS} (linha azul) e ${MATERIALS.PLASTICOS} (linha verde)`}
+          description={`${MATERIALS.METALICOS} (linha roxa) , ${MATERIALS.PLASTICOS} (linha verde) e ${MATERIALS.DESCARTE} (linha vermelha).}`}
           data={chartData}
         />
       </div>

@@ -51,9 +51,6 @@ export default async function Home(props: { params: Params }) {
     (item) => item.peca_tipo === tipoMaterial
   );
 
-  console.log([...new Set(flatData.map(item => item.peca_tipo))]);
-
-
   const chartData = dadosFiltrados.map((item) => ({
     horario: item.time,
     unidades: item.total_separacoes,
